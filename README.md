@@ -30,11 +30,11 @@
 
 本项目实现了一个**多层 Multi-Agent 智能体系统**。用户用自然语言描述旅行需求，系统自动调用高德地图 API 查询天气、搜索景点酒店、规划路线，最终输出结构化的旅行计划 JSON + 格式化可读文本 + 可下载 Markdown。
 
-![示例1](E:\Desktop\Agent\Project\Agent_Demo\Travel-Agent\Agent\示例1.png)
+![示例1](示例1.png)
 
-![示例2](E:\Desktop\Agent\Project\Agent_Demo\Travel-Agent\Agent\示例2.png)
+![示例2](示例2.png)
 
-![示例3](E:\Desktop\Agent\Project\Agent_Demo\Travel-Agent\Agent\示例3.png)
+![示例3](示例3.png)
 
 
 
