@@ -45,8 +45,8 @@ st.markdown("""
 # ---- 初始化 ----
 @st.cache_resource
 def get_planner():
-    from config import CONFIG
-    from agents.planner import TripPlanner
+    from src.config import CONFIG
+    from src.agents.planner import TripPlanner
     llm = CONFIG.create_llm()
     return TripPlanner(llm)
 
@@ -191,7 +191,7 @@ if submit_btn:
 
         # 流式输出区域
         with st.spinner("🤖 AI 正在为您规划旅行方案..."):
-            from render import parse_plan
+            from src.render import parse_plan
 
             stream_placeholder = st.empty()
             status_placeholder = st.empty()

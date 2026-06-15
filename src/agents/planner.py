@@ -7,9 +7,9 @@ from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_core.language_models import BaseChatModel
 
-from mcp_client import McpClientManager
-from agents.specialist import SpecialistAgent
-from prompts import (
+from src.mcp_client import McpClientManager
+from src.agents.specialist import SpecialistAgent
+from src.prompts import (
     HOTEL_AGENT_PROMPT,
     ATTRACTION_AGENT_PROMPT,
     WEATHER_AGENT_PROMPT,

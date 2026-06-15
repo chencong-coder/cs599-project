@@ -6,9 +6,9 @@
     python Agent.py --no-stream    # 非流式输出
 """
 import asyncio
-from config import CONFIG
-from agents.planner import TripPlanner
-from render import format_plan_cli
+from src.config import CONFIG
+from src.agents.planner import TripPlanner
+from src.render import format_plan_cli
 
 
 # ==================== 演示 ====================
