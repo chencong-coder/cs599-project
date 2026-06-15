@@ -9,8 +9,8 @@
 本项目从零构建了一个多层 Multi-Agent 智能体系统，使用 LangGraph 作为 Agent 编排框架，通过 MCP 协议集成外部地图服务，实现 Planner → Specialist → MCP Tools 三层 Agent 协作架构。
 
 ## 技术栈
-- **AI IDE**: VS Code / Trae CN
-- **LLM**: 通义千问 (qwen3-max) via 阿里百炼 DashScope API
+- **AI IDE**: VS Code
+- **LLM**: 通义千问 (qwen3.7-plus) via 阿里百炼 DashScope API
 - **Agent 框架**: LangChain + LangGraph
 - **MCP 协议**: langchain-mcp-adapters（连接高德地图服务）
 - **Web 界面**: Streamlit 1.32.0
