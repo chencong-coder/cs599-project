@@ -1,46 +1,13 @@
 """
 配置中心 —— 统一管理环境变量、LLM 实例、MCP 连接参数。
+使用 OpenAI 兼容接口调用通义千问（阿里百炼）。
 """
 import os
 from dataclasses import dataclass, field
 from dotenv import load_dotenv
-from langchain_community.chat_models.tongyi import ChatTongyi
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
-
-# ========== 修复 langchain_community ChatTongyi 流式 tool_calls 的 KeyError ==========
-# 上游 bug: subtract_client_response 访问 prev_function["name"] / ["arguments"]
-# 前没有检查 key 是否存在。流式首个 tool_call chunk 可能不含这些 key。
-
-
-def _patched_subtract(self, resp, prev_resp):
-    import json
-
-    resp_copy = json.loads(json.dumps(resp))
-    message = resp_copy["output"]["choices"][0]["message"]
-    prev_message = json.loads(json.dumps(prev_resp))["output"]["choices"][0]["message"]
-
-    message["content"] = message["content"].replace(
-        prev_message.get("content", "") or "", ""
-    )
-
-    if message.get("tool_calls") and prev_message.get("tool_calls"):
-        for index, tool_call in enumerate(message["tool_calls"]):
-            function = tool_call["function"]
-            prev_function = prev_message["tool_calls"][index]["function"]
-
-            if "name" in function and "name" in prev_function:
-                function["name"] = function["name"].replace(prev_function["name"], "")
-            if "arguments" in function and "arguments" in prev_function:
-                function["arguments"] = function["arguments"].replace(
-                    prev_function["arguments"], ""
-                )
-
-    return resp_copy
-
-
-ChatTongyi.subtract_client_response = _patched_subtract
-# ========== 修复结束 ==========
 
 
 @dataclass
@@ -52,9 +19,10 @@ class Config:
         default_factory=lambda: os.getenv("DASHSCOPE_API_KEY", "")
     )
 
-    # LLM
-    model_name: str = "qwen3-max"
+    # LLM（OpenAI 兼容接口）
+    model_name: str = "qwen3.7-plus"
     temperature: float = 0.7
+    base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 
     # MCP 连接（阿里百炼高德地图）
     mcp_transport: str = "http"
@@ -77,12 +45,13 @@ class Config:
             raise ValueError("请配置 DASHSCOPE_API_KEY")
 
     # 创建模型实例对象
-    def create_llm(self) -> ChatTongyi:
-        return ChatTongyi(
+    def create_llm(self) -> ChatOpenAI:
+        return ChatOpenAI(
             model=self.model_name,
             api_key=self.api_key,
+            base_url=self.base_url,
             temperature=self.temperature,
-            streaming=True,          # ← 启用水龙头，流式输出最远走到这里
+            streaming=True,
         )
 
 

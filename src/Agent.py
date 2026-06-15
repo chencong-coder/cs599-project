@@ -6,9 +6,13 @@
     python Agent.py --no-stream    # 非流式输出
 """
 import asyncio
+import sys
 from src.config import CONFIG
 from src.agents.planner import TripPlanner
 from src.render import format_plan_cli
+
+# Windows 终端 UTF-8 支持
+sys.stdout.reconfigure(encoding='utf-8')
 
 
 # ==================== 演示 ====================
