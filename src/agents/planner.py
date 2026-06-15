@@ -1,5 +1,6 @@
 """
 行程规划总控 Agent —— 持有子 Agent 作为工具，统一编排并流式输出最终行程。
+生产级增强：Agentic RAG 知识检索、调用链路追踪、容错降级。
 """
 import re
 from typing import AsyncIterator
@@ -9,6 +10,8 @@ from langchain_core.language_models import BaseChatModel
 
 from src.mcp_client import McpClientManager
 from src.agents.specialist import SpecialistAgent
+from src.knowledge import search_travel_knowledge
+from src.logger import get_tracer
 from src.prompts import (
     HOTEL_AGENT_PROMPT,
     ATTRACTION_AGENT_PROMPT,
@@ -21,6 +24,7 @@ TOOL_LABELS = {
     "query_weather":     ("🌤️", "查询天气"),
     "search_hotel":      ("🏨", "搜索酒店"),
     "search_attraction": ("🏛️", "搜索景点"),
+    "search_travel_tips":("📚", "检索旅行知识"),
     "maps_direction_walking_by_address":             ("🚶", "规划步行路线"),
     "maps_direction_driving_by_address":             ("🚗", "规划驾车路线"),
     "maps_direction_transit_integrated_by_address":  ("🚌", "规划公交路线"),
@@ -56,6 +60,7 @@ class TripPlanner:
     def __init__(self, llm: BaseChatModel):
         self.llm = llm
         self.mcp = McpClientManager()
+        self._tracer = get_tracer("TripPlanner")
 
         # 子 Agent（build 时初始化）
         self._hotel_agent: SpecialistAgent | None = None
@@ -95,20 +100,33 @@ class TripPlanner:
         @tool
         async def search_hotel(query: str) -> str:
             """搜索酒店。输入城市+偏好，返回酒店列表。"""
-            return await self._hotel_agent.invoke(query)
+            async with self._tracer.span("search_hotel", query=query[:50]):
+                return await self._hotel_agent.invoke(query)
 
         @tool
         async def search_attraction(query: str) -> str:
             """搜索景点。输入城市+类型偏好，返回景点列表。"""
-            return await self._attraction_agent.invoke(query)
+            async with self._tracer.span("search_attraction", query=query[:50]):
+                return await self._attraction_agent.invoke(query)
 
         @tool
         async def query_weather(query: str) -> str:
             """查询天气。输入城市+日期，返回天气概况。"""
-            return await self._weather_agent.invoke(query)
+            async with self._tracer.span("query_weather", query=query[:50]):
+                return await self._weather_agent.invoke(query)
 
-        # 4. 组装 Planner：子 Agent 工具 + 路线 MCP 工具
-        all_tools = [search_hotel, search_attraction, query_weather, *route_tools]
+        @tool
+        async def search_travel_tips(query: str) -> str:
+            """检索旅行知识库。输入查询问题，返回相关的旅行贴士、注意事项、美食推荐等实用信息。用于补充MCP工具无法提供的本地知识。"""
+            async with self._tracer.span("RAG检索", query=query[:50]):
+                return search_travel_knowledge(query, city="", top_k=5)
+
+        # 4. 组装 Planner：子 Agent 工具 + 路线 MCP 工具 + RAG 知识工具
+        all_tools = [
+            search_hotel, search_attraction, query_weather,
+            search_travel_tips,
+            *route_tools,
+        ]
 
         self._agent = create_agent(
             model=self.llm,

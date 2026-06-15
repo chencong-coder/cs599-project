@@ -96,6 +96,7 @@ _STREAM_LABELS = {
     "query_weather":     "🌤️ 查询天气中...",
     "search_hotel":      "🏨 搜索酒店中...",
     "search_attraction": "🏛️ 搜索景点中...",
+    "search_travel_tips":"📚 检索旅行知识...",
     "maps_direction_walking_by_address":             "🚶 规划步行路线...",
     "maps_direction_driving_by_address":             "🚗 规划驾车路线...",
     "maps_direction_transit_integrated_by_address":  "🚌 规划公交路线...",
@@ -183,10 +184,17 @@ if not submit_btn and st.session_state.plan_data is None:
 
 # 点击按钮后执行
 if submit_btn:
-    if not city.strip():
-        st.error("请输入目的地城市")
-    elif end_date < start_date:
-        st.error("结束日期不能早于开始日期")
+    from src.validation import TravelRequest
+
+    req = TravelRequest(
+        city=city, start_date=start_date, end_date=end_date,
+        transport=transport_selected, hotel_type=hotel_type,
+        preferences=pref_selected, extra=extra_requirements,
+    )
+    errors = req.validate()
+    if errors:
+        for err in errors:
+            st.error(err)
     else:
         planner = get_planner()
         prompt = build_prompt(

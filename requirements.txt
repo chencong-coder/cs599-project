@@ -1,0 +1,8 @@
+langchain>=1.0
+langchain-community>=0.3
+langchain-mcp-adapters>=0.3
+langchain-openai>=1.0
+langgraph>=1.0
+streamlit>=1.32
+python-dotenv>=1.0
+dashscope>=1.20
