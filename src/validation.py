@@ -17,7 +17,7 @@ class TravelRequest:
     city: str
     start_date: date
     end_date: date
-    trip_days: int
+    trip_days: int = 0
     transport: list[str]
     hotel_type: str
     preferences: list[str]
