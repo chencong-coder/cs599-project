@@ -22,7 +22,7 @@
 src/
 ├── Agent.py                  # CLI 入口
 ├── app.py                    # Streamlit Web 入口
-├── config.py                 # 配置中心：API Key、模型参数、MCP 连接 + Monkey-Patch
+├── config.py                 # 配置中心：API Key、模型参数、MCP 连接
 ├── mcp_client.py             # MCP 客户端管理器（单例模式）
 ├── prompts.py                # System Prompt 集中管理（5 个 Prompt）
 ├── render.py                 # 渲染引擎：JSON 解析 + CLI/Web 格式化输出
@@ -34,7 +34,7 @@ src/
 ### 模块职责
 | 模块 | 职责 |
 |------|------|
-| `config.py` | 全局配置单例，LLM 工厂方法，修复 ChatTongyi 流式 tool_calls 的 KeyError bug |
+| `config.py` | 全局配置单例，LLM 工厂方法，OpenAI 兼容接口调用通义千问 |
 | `mcp_client.py` | MCP 连接生命周期管理，按领域（poi/weather/route）分发工具 |
 | `specialist.py` | 单一职责 ReAct Agent，封装酒店搜索、景点搜索、天气查询 |
 | `planner.py` | 总控编排：加载工具 → 创建子 Agent → 包装为 Tool → 流式输出 |
@@ -185,10 +185,10 @@ streamlit run src/app.py
 | **适配器模式** | `render.py` | 将 JSON 数据适配为 CLI 格式 / Streamlit 组件两种视图 |
 
 ## 关键 Bug 修复记录
-### Bug 1：ChatTongyi 流式 tool_calls 的 KeyError
+### Bug 1：ChatTongyi 流式 tool_calls 的 KeyError（已解决）
 - **症状**：`KeyError: 'name'` at `tongyi.py:606`
 - **根因**：`langchain_community` 的 `subtract_client_response()` 未对 `prev_function` 做 key 存在性检查
-- **修复**：[config.py](src/config.py) — Monkey-patch `ChatTongyi.subtract_client_response`，添加守卫条件
+- **最终方案**：切换为 `ChatOpenAI` + 百炼 OpenAI 兼容接口，从根源规避该 Bug
 
 ### Bug 2：`nonlocal` 作用域错误
 - **症状**：`SyntaxError: no binding for nonlocal 'full_text' found`

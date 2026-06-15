@@ -1,6 +1,11 @@
 """智能旅行助手 — Streamlit Web 界面。"""
 import asyncio
+import sys
 from datetime import date
+from pathlib import Path
+
+# 确保项目根目录在 Python 路径中
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import streamlit as st
 
