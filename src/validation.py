@@ -18,10 +18,10 @@ class TravelRequest:
     start_date: date
     end_date: date
     trip_days: int = 0
-    transport: list[str]
-    hotel_type: str
-    preferences: list[str]
-    extra: str
+    transport: list[str] = field(default_factory=list)
+    hotel_type: str = ""
+    preferences: list[str] = field(default_factory=list)
+    extra: str = ""
 
     # 校验规则
     MAX_CITY_LEN = 30
