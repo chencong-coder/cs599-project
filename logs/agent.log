@@ -1,0 +1,22 @@
+06-15 19:19:43 | INFO    | travel_agent.McpClientManager | ▶ MCP连接 (第1次) 开始 
+06-15 19:19:44 | INFO    | travel_agent.McpClientManager | ✓ MCP连接 (第1次) 完成 (0.84s)
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ query_weather 开始 {'query': '长沙 2026-05-21'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ query_weather 开始 {'query': '长沙 2026-05-22'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ query_weather 开始 {'query': '长沙 2026-05-23'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ search_hotel 开始 {'query': '长沙五一广场附近酒店 中等预算'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ search_attraction 开始 {'query': '长沙自然风光景点'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ search_attraction 开始 {'query': '长沙历史文化景点'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ▶ RAG检索 开始 {'query': '长沙旅游攻略 美食推荐 交通'}
+06-15 19:19:55 | INFO    | travel_agent.TripPlanner | ✓ RAG检索 完成 (0.00s)
+06-15 19:19:58 | INFO    | travel_agent.TripPlanner | ✓ search_hotel 完成 (2.97s)
+06-15 19:19:58 | INFO    | travel_agent.TripPlanner | ✓ search_attraction 完成 (3.05s)
+06-15 19:20:00 | INFO    | travel_agent.TripPlanner | ✓ query_weather 完成 (5.08s)
+06-15 19:20:01 | INFO    | travel_agent.TripPlanner | ✓ query_weather 完成 (5.72s)
+06-15 19:20:04 | INFO    | travel_agent.TripPlanner | ✓ search_attraction 完成 (8.93s)
+06-15 19:20:10 | INFO    | travel_agent.TripPlanner | ✓ query_weather 完成 (14.53s)
+06-15 19:20:17 | INFO    | travel_agent.TripPlanner | ▶ search_attraction 开始 {'query': '长沙 岳麓山 橘子洲 湖南省博物馆'}
+06-15 19:20:17 | INFO    | travel_agent.TripPlanner | ▶ search_hotel 开始 {'query': '长沙五一广场 酒店'}
+06-15 19:20:19 | INFO    | travel_agent.TripPlanner | ✓ search_hotel 完成 (2.15s)
+06-15 19:20:35 | INFO    | travel_agent.TripPlanner | ✓ search_attraction 完成 (18.07s)
+06-15 19:20:48 | INFO    | travel_agent.TripPlanner | ▶ RAG检索 开始 {'query': '长沙五一广场附近酒店推荐 中等预算'}
+06-15 19:20:48 | INFO    | travel_agent.TripPlanner | ✓ RAG检索 完成 (0.00s)
